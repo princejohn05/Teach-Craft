@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeachCraft | Premium Digital Learning Materials & Reviewers</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        sage: {
+                            50: '#f4f7f5',
+                            100: '#e3ece7',
+                            500: '#6b9080',
+                            600: '#527264',
+                            700: '#3f574d',
+                        },
+                        navy: {
+                            800: '#1b2a38',
+                            900: '#101820',
+                        },
+                        coral: {
+                            500: '#ee6c4d',
+                            600: '#d95332',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9fbf9;
+            color: #1b2a38;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .floating-badge {
+            animation: float 4s ease-in-out infinite;
+        }
+        .modal-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-sage-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-sage-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" onclick="switchTab('home')" class="flex items-center space-x-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sage-500 to-sage-700 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight text-navy-900">Teach<span class="text-sage-600">Craft</span></span>
+                    <span class="block text-[10px] tracking-widest uppercase font-semibold text-gray-500">Digital Learning Hub</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                <button onclick="switchTab('home')" id="nav-home" class="text-sage-700 font-semibold transition-colors hover:text-sage-600">Home</button>
+                <button onclick="switchTab('shop')" id="nav-shop" class="text-gray-600 hover:text-sage-600 transition-colors">Shop All</button>
+                <a href="#categories" onclick="switchTab('home');" class="text-gray-600 hover:text-sage-600 transition-colors">Categories</a>
+                <a href="#about" onclick="switchTab('home');" class="text-gray-600 hover:text-sage-600 transition-colors">About & Trust</a>
+                <a href="#testimonials" onclick="switchTab('home');" class="text-gray-600 hover:text-sage-600 transition-colors">Reviews</a>
+            </nav>
+
+            <!-- Actions (Cart & CTA) -->
+            <div class="flex items-center space-x-3">
+                <button onclick="openCart()" class="relative p-2.5 rounded-xl bg-sage-50 text-sage-700 hover:bg-sage-100 transition-colors focus:outline-none" aria-label="Shopping Cart">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-coral-500 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm">0</span>
+                </button>
+                <button onclick="openOwnerLoginModal()" class="hidden sm:inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-navy-900/10 hover:bg-navy-900/20 text-navy-900 text-xs font-bold transition-all" title="Owner Admin Login">
+                    <i class="fa-solid fa-shield-halved text-sage-600"></i>
+                    <span>Owner Portal</span>
+                </button>
+                <button onclick="switchTab('shop'); filterCategory('All');" class="hidden md:inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-sm font-semibold shadow-md transition-all">
+                    <span>Shop Catalog</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 rounded-lg font-medium text-gray-700 hover:bg-sage-50">Home</button>
+            <button onclick="switchTab('shop'); toggleMobileMenu();" class="block w-full text-left py-2 px-3 rounded-lg font-medium text-gray-700 hover:bg-sage-50">Shop All Products</button>
+            <button onclick="openOwnerLoginModal(); toggleMobileMenu();" class="block w-full text-left py-2 px-3 rounded-lg font-medium text-sage-700 hover:bg-sage-50">🔒 Owner Admin Login</button>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Container -->
+    <main class="flex-grow">
+
+        <!-- ================= HOME VIEW ================= -->
+        <div id="view-home" class="view-section">
+            <!-- Hero Section -->
+            <section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-sage-50/70 via-white to-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                        
+                        <!-- Hero Left Content -->
+                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-sage-100 text-sage-700 text-xs font-semibold tracking-wide uppercase">
+                                <i class="fa-solid fa-bolt text-coral-500"></i>
+                                <span>Instant Digital Downloads • PDF, Notion & Canva</span>
+                            </div>
+                            
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy-900 tracking-tight leading-[1.15]">
+                                Reclaim Your Evenings. <span class="text-sage-600 block sm:inline">Elevate Every Lesson.</span>
+                            </h1>
+                            
+                            <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0 font-normal">
+                                Stop spending hours starting from scratch. Access battle-tested digital lesson plans, high-conversion worksheets, and comprehensive board exam reviewers designed to guarantee results.
+                            </p>
+                            
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+                                <button onclick="switchTab('shop')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-coral-500 hover:bg-coral-600 text-white font-bold shadow-lg shadow-coral-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-3">
+                                    <span>Explore Shop Catalog</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                                <a href="#featured" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white hover:bg-sage-50 text-navy-900 font-semibold border border-gray-200 transition-all flex items-center justify-center space-x-2">
+                                    <i class="fa-regular fa-eye text-sage-600"></i>
+                                    <span>View Best Sellers</span>
+                                </a>
+                            </div>
+
+                            <!-- Trust Proof Bar -->
+                            <div class="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-500 font-medium">
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex text-amber-400 space-x-0.5">
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <span class="text-navy-900 font-bold">4.9/5 Rating</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fa-solid fa-user-check text-sage-600 text-base"></i>
+                                    <span>Trusted by <strong class="text-navy-900">5,000+</strong> Educators & Achievers</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hero Right Graphic / Mockup Cards -->
+                        <div class="lg:col-span-5 relative">
+                            <div class="relative mx-auto max-w-md lg:max-w-none">
+                                <!-- Main Graphic Card -->
+                                <div class="rounded-3xl bg-gradient-to-tr from-navy-900 to-sage-700 p-2 shadow-2xl">
+                                    <div class="bg-white rounded-[22px] p-6 space-y-5">
+                                        <div class="flex items-center justify-between">
+                                            <span class="px-3 py-1 bg-sage-100 text-sage-700 rounded-lg text-xs font-bold uppercase">Featured Bundle</span>
+                                            <span class="text-xs text-gray-400 font-medium"><i class="fa-solid fa-shield-halved text-sage-600 mr-1"></i> Instant Access</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-xl font-extrabold text-navy-900">Complete LET Board Exam & Civil Service Master Reviewer</h3>
+                                            <p class="text-sm text-gray-500 mt-1">1,200+ Practice Questions with Rationalized Answers & Notion Study Dashboard.</p>
+                                        </div>
+                                        <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                            <div>
+                                                <span class="text-xs text-gray-400 line-through">₱1,499</span>
+                                                <div class="text-2xl font-black text-coral-500">₱699 <span class="text-xs text-gray-500 font-normal">/ lifetime</span></div>
+                                            </div>
+                                            <button onclick="openProductModal(3)" class="px-4 py-2.5 bg-sage-600 hover:bg-sage-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors">
+                                                Preview Material
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Floating Badge 1 -->
+                                <div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl shadow-xl border border-sage-100 hidden sm:flex items-center space-x-3 floating-badge">
+                                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+                                        <i class="fa-solid fa-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-navy-900">Zero Prep Time</div>
+                                        <div class="text-[11px] text-gray-500">Ready to print & deploy</div>
+                                    </div>
+                                </div>
+
+                                <!-- Floating Badge 2 -->
+                                <div class="absolute -top-6 -right-6 glass-card p-4 rounded-2xl shadow-xl border border-sage-100 hidden sm:flex items-center space-x-3 floating-badge" style="animation-delay: 2s;">
+                                    <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center font-bold text-lg">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-navy-900">100% Editable</div>
+                                        <div class="text-[11px] text-gray-500">PDF & Canva Formats</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category Quick-Nav Section -->
+            <section id="categories" class="py-16 bg-white border-y border-sage-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <h2 class="text-3xl font-extrabold text-navy-900">Explore by Category</h2>
+                        <p class="text-gray-600 mt-2">Tailored digital assets built specifically for educators, students, and high-achieving professionals.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <!-- Category 1 -->
+                        <div onclick="switchTab('shop'); filterCategory('Teachers');" class="group p-6 rounded-2xl bg-sage-50/60 hover:bg-sage-100/80 border border-sage-100 text-center cursor-pointer transition-all transform hover:-translate-y-1">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-sage-600 text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform mb-4">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <h3 class="font-bold text-navy-900 text-lg">For Teachers</h3>
+                            <p class="text-xs text-gray-500 mt-1">Lesson plans, classroom decor & rubrics</p>
+                        </div>
+
+                        <!-- Category 2 -->
+                        <div onclick="switchTab('shop'); filterCategory('Reviewers');" class="group p-6 rounded-2xl bg-sage-50/60 hover:bg-sage-100/80 border border-sage-100 text-center cursor-pointer transition-all transform hover:-translate-y-1">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-coral-500 text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform mb-4">
+                                <i class="fa-solid fa-book-open-reader"></i>
+                            </div>
+                            <h3 class="font-bold text-navy-900 text-lg">Reviewers</h3>
+                            <p class="text-xs text-gray-500 mt-1">LET, Civil Service & Entrance exams</p>
+                        </div>
+
+                        <!-- Category 3 -->
+                        <div onclick="switchTab('shop'); filterCategory('Digital Dashboards');" class="group p-6 rounded-2xl bg-sage-50/60 hover:bg-sage-100/80 border border-sage-100 text-center cursor-pointer transition-all transform hover:-translate-y-1">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-navy-900 text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform mb-4">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <h3 class="font-bold text-navy-900 text-lg">Digital Dashboards</h3>
+                            <p class="text-xs text-gray-500 mt-1">Notion grade trackers & planners</p>
+                        </div>
+
+                        <!-- Category 4 -->
+                        <div onclick="switchTab('shop'); filterCategory('Printables');" class="group p-6 rounded-2xl bg-sage-50/60 hover:bg-sage-100/80 border border-sage-100 text-center cursor-pointer transition-all transform hover:-translate-y-1">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform mb-4">
+                                <i class="fa-solid fa-print"></i>
+                            </div>
+                            <h3 class="font-bold text-navy-900 text-lg">Printables</h3>
+                            <p class="text-xs text-gray-500 mt-1">Math drills, worksheets & flashcards</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products Section -->
+            <section id="featured" class="py-20 bg-gray-50/50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-sage-600">Top Rated & Most Downloaded</span>
+                            <h2 class="text-3xl font-extrabold text-navy-900 mt-1">Featured Learning Materials</h2>
+                        </div>
+                        <button onclick="switchTab('shop')" class="mt-4 md:mt-0 text-sm font-bold text-sage-700 hover:text-sage-600 flex items-center space-x-2 group">
+                            <span>View All Products in Catalog</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+
+                    <!-- Products Grid (Dynamic rendered via JS) -->
+                    <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Populated by renderFeaturedProducts() -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Value Proposition / Pillars Section -->
+            <section class="py-20 bg-white border-t border-sage-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="text-xs font-bold uppercase tracking-widest text-sage-600">Why Educators Choose TeachCraft</span>
+                        <h2 class="text-3xl font-extrabold text-navy-900 mt-1">Designed by Teachers, For High Achievers</h2>
+                        <p class="text-gray-600 mt-2">We build classroom-ready tools that save you hours of prep time and maximize student engagement.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="p-8 rounded-3xl bg-sage-50/50 border border-sage-100 text-center space-y-4">
+                            <div class="w-16 h-16 mx-auto rounded-2xl bg-sage-600 text-white flex items-center justify-center text-2xl shadow-md">
+                                <i class="fa-solid fa-bolt-lightning"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-navy-900">Instant Access</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Download instantly via secure PDF, Google Drive link, or Notion template right after checkout.</p>
+                        </div>
+
+                        <div class="p-8 rounded-3xl bg-sage-50/50 border border-sage-100 text-center space-y-4">
+                            <div class="w-16 h-16 mx-auto rounded-2xl bg-coral-500 text-white flex items-center justify-center text-2xl shadow-md">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-navy-900">Curriculum Aligned</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Every worksheet and reviewer is rigorously structured following standard competency frameworks and board syllabi.</p>
+                        </div>
+
+                        <div class="p-8 rounded-3xl bg-sage-50/50 border border-sage-100 text-center space-y-4">
+                            <div class="w-16 h-16 mx-auto rounded-2xl bg-navy-900 text-white flex items-center justify-center text-2xl shadow-md">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-navy-900">Save 15+ Hours Weekly</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Reclaim your weekends and evenings. Stop staring at blank templates and start teaching with confidence.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Testimonials Section -->
+            <section id="testimonials" class="py-20 bg-gray-50/50 border-t border-sage-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-16">
+                        <span class="text-xs font-bold uppercase tracking-widest text-sage-600">Loved by Educators & Topnotchers</span>
+                        <h2 class="text-3xl font-extrabold text-navy-900 mt-1">What Our Community Says</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Testimonial 1 -->
+                        <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400 text-sm">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-sm italic leading-relaxed">"The Grade 3 Math Remediation Toolkit saved my sanity this grading period. The interactive drills kept my pupils engaged and test scores jumped by 34%!"</p>
+                            </div>
+                            <div class="flex items-center space-x-3 pt-4 border-t border-gray-100">
+                                <div class="w-10 h-10 rounded-full bg-sage-200 text-sage-700 font-bold flex items-center justify-center text-sm">MS</div>
+                                <div>
+                                    <h4 class="font-bold text-navy-900 text-sm">Maria Santos</h4>
+                                    <p class="text-xs text-gray-500">Master Teacher I, Quezon City</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400 text-sm">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-sm italic leading-relaxed">"I passed the LET Licensure Examination on my first try thanks to the Master Reviewer Kit. The rationalized answers made all the difficult professional education concepts click."</p>
+                            </div>
+                            <div class="flex items-center space-x-3 pt-4 border-t border-gray-100">
+                                <div class="w-10 h-10 rounded-full bg-coral-100 text-coral-600 font-bold flex items-center justify-center text-sm">JD</div>
+                                <div>
+                                    <h4 class="font-bold text-navy-900 text-sm">John Dominic Reyes, LPT</h4>
+                                    <p class="text-xs text-gray-500">Secondary Education Topnotcher</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                            <div class="space-y-4">
+                                <div class="flex text-amber-400 text-sm">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-sm italic leading-relaxed">"The Notion Digital Grade Tracker is sleek, intuitive, and insanely fast. It cut down my record-keeping time from hours to mere minutes."</p>
+                            </div>
+                            <div class="flex items-center space-x-3 pt-4 border-t border-gray-100">
+                                <div class="w-10 h-10 rounded-full bg-navy-100 text-navy-900 font-bold flex items-center justify-center text-sm">AV</div>
+                                <div>
+                                    <h4 class="font-bold text-navy-900 text-sm">Ana Villanueva</h4>
+                                    <p class="text-xs text-gray-500">High School Department Head</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About & Trust Section -->
+            <section id="about" class="py-20 bg-white border-t border-sage-100">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-6 space-y-6">
+                            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-sage-100 text-sage-700 text-xs font-semibold uppercase">
+                                <i class="fa-solid fa-heart text-coral-500"></i>
+                                <span>Our Mission & Story</span>
+                            </div>
+                            <h2 class="text-3xl lg:text-4xl font-extrabold text-navy-900 tracking-tight">
+                                Built by Educators, For Educators & Achievers.
+                            </h2>
+                            <p class="text-gray-600 text-base leading-relaxed">
+                                I started TeachCraft out of a deep personal understanding of the late nights spent crafting lesson plans, searching for reliable review materials, and trying to make learning engaging on limited resources. 
+                            </p>
+                            <p class="text-gray-600 text-base leading-relaxed">
+                                Every template, worksheet, and reviewer in this shop is field-tested, purposeful, and designed to cut your prep time in half so you can focus on what truly matters: teaching, inspiring, and succeeding.
+                            </p>
+                            <div class="grid grid-cols-2 gap-4 pt-2">
+                                <div class="p-4 rounded-2xl bg-sage-50 border border-sage-100">
+                                    <div class="text-2xl font-black text-sage-700">100%</div>
+                                    <div class="text-xs text-gray-500 mt-0.5">Field-Tested Materials</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-sage-50 border border-sage-100">
+                                    <div class="text-2xl font-black text-sage-700">24/7</div>
+                                    <div class="text-xs text-gray-500 mt-0.5">Instant Digital Delivery</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-6">
+                            <div class="rounded-3xl bg-gradient-to-br from-sage-600 to-navy-900 p-8 text-white shadow-2xl relative overflow-hidden">
+                                <div class="relative z-10 space-y-6">
+                                    <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl backdrop-blur-md">
+                                        <i class="fa-solid fa-quote-left text-coral-400"></i>
+                                    </div>
+                                    <blockquote class="text-lg lg:text-xl font-medium leading-relaxed italic">
+                                        "Quality education should never feel like an uphill battle against time. When we equip teachers and reviewers with world-class tools, everyone wins."
+                                    </blockquote>
+                                    <div>
+                                        <div class="font-bold text-base">Teacher Clara, LPT</div>
+                                        <div class="text-xs text-sage-200">Founder & Curriculum Designer, TeachCraft</div>
+                                    </div>
+                                </div>
+                                <!-- Background accent blob -->
+                                <div class="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-white/5 blur-2xl"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= SHOP / CATALOG VIEW ================= -->
+        <div id="view-shop" class="view-section hidden py-12 bg-gray-50/50 min-h-[80vh]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Shop Header -->
+                <div class="mb-8">
+                    <div class="flex items-center space-x-2 text-xs font-bold text-sage-600 uppercase tracking-widest mb-1">
+                        <button onclick="switchTab('home')" class="hover:underline">Home</button>
+                        <span>/</span>
+                        <span>Catalog</span>
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold text-navy-900">Digital Resource Catalog</h1>
+                    <p class="text-gray-600 mt-2">Filter through our complete collection of lesson plans, reviewers, Notion templates, and printables.</p>
+                </div>
+
+                <!-- Filters & Search Toolbar -->
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-sage-100 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <!-- Category Tabs -->
+                    <div id="category-filter-buttons" class="flex flex-wrap items-center gap-2">
+                        <button onclick="filterCategory('All')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-navy-900 text-white shadow-sm transition-colors cat-btn" data-cat="All">All Products</button>
+                        <button onclick="filterCategory('Teachers')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sage-50 text-gray-700 hover:bg-sage-100 transition-colors cat-btn" data-cat="Teachers">For Teachers</button>
+                        <button onclick="filterCategory('Reviewers')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sage-50 text-gray-700 hover:bg-sage-100 transition-colors cat-btn" data-cat="Reviewers">Reviewers</button>
+                        <button onclick="filterCategory('Digital Dashboards')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sage-50 text-gray-700 hover:bg-sage-100 transition-colors cat-btn" data-cat="Digital Dashboards">Digital Dashboards</button>
+                        <button onclick="filterCategory('Printables')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-sage-50 text-gray-700 hover:bg-sage-100 transition-colors cat-btn" data-cat="Printables">Printables</button>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-72">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        </span>
+                        <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search materials..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                    </div>
+                </div>
+
+                <!-- Products Catalog Grid -->
+                <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Populated by renderShopProducts() -->
+                </div>
+
+                <!-- Empty State for Search -->
+                <div id="empty-state" class="hidden text-center py-20 space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-sage-100 text-sage-700 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-navy-900">No matching materials found</h3>
+                    <p class="text-sm text-gray-500">Try searching for something else or reset your category filter.</p>
+                    <button onclick="filterCategory('All'); document.getElementById('search-input').value='';" class="px-5 py-2.5 rounded-xl bg-sage-600 text-white font-bold text-sm">Reset Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= OWNER ADMIN DASHBOARD VIEW ================= -->
+        <div id="view-admin" class="view-section hidden py-12 bg-gray-50/70 min-h-[85vh]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <!-- Admin Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 sm:p-8 rounded-3xl border border-sage-100 shadow-sm gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sage-600 text-white flex items-center justify-center text-2xl shadow-md">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h1 class="text-2xl font-extrabold text-navy-900">Owner Admin Dashboard</h1>
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold"><i class="fa-solid fa-circle text-[8px] text-emerald-500 mr-1"></i> Secure Session Active</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-0.5">Manage digital products, view real-time GCash orders, and monitor revenue.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="switchTab('home')" class="px-4 py-2.5 rounded-xl bg-sage-50 text-sage-700 hover:bg-sage-100 text-xs font-bold transition-colors">
+                            <i class="fa-solid fa-store mr-1.5"></i> View Storefront
+                        </button>
+                        <button onclick="ownerLogout()" class="px-4 py-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold transition-colors">
+                            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Lock Portal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Analytics Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between text-gray-400">
+                            <span class="text-xs font-bold uppercase tracking-wider">Total GCash Revenue</span>
+                            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i class="fa-solid fa-peso-sign"></i>
+                            </div>
+                        </div>
+                        <div id="admin-total-revenue" class="text-3xl font-black text-navy-950">₱0.00</div>
+                        <div class="text-xs text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up mr-1"></i> Direct to 09518945949 (Julia Ann Nicolas)</div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between text-gray-400">
+                            <span class="text-xs font-bold uppercase tracking-wider">Total Orders</span>
+                            <div class="w-9 h-9 rounded-xl bg-sage-50 text-sage-600 flex items-center justify-center">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                        </div>
+                        <div id="admin-total-orders" class="text-3xl font-black text-navy-950">0</div>
+                        <div class="text-xs text-gray-500">Successful GCash verified payments</div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between text-gray-400">
+                            <span class="text-xs font-bold uppercase tracking-wider">Active Digital Products</span>
+                            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i class="fa-solid fa-book-open"></i>
+                            </div>
+                        </div>
+                        <div id="admin-total-products" class="text-3xl font-black text-navy-950">0</div>
+                        <div class="text-xs text-gray-500">Available for instant download</div>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs / Sections -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Add New Product Form -->
+                    <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                        <div class="flex items-center space-x-2 pb-4 border-b border-gray-100">
+                            <i class="fa-solid fa-circle-plus text-sage-600 text-lg"></i>
+                            <h3 class="font-extrabold text-navy-900 text-lg">Add New Digital Product</h3>
+                        </div>
+                        <form onsubmit="handleAddNewProduct(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Product Title</label>
+                                <input type="text" id="new-prod-title" required placeholder="e.g. Science Remediation Pack" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Price (₱)</label>
+                                    <input type="number" id="new-prod-price" required min="1" placeholder="499" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Original Price (₱)</label>
+                                    <input type="number" id="new-prod-orig" required min="1" placeholder="999" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Category</label>
+                                <select id="new-prod-cat" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                                    <option value="Teachers">For Teachers</option>
+                                    <option value="Reviewers">Reviewers</option>
+                                    <option value="Digital Dashboards">Digital Dashboards</option>
+                                    <option value="Printables">Printables</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Format Type</label>
+                                <input type="text" id="new-prod-format" required placeholder="PDF & Canva" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Image Thumbnail URL</label>
+                                <input type="url" id="new-prod-img" required placeholder="https://placehold.co/600x400/..." class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Description</label>
+                                <textarea id="new-prod-desc" rows="3" required placeholder="Detailed description of the digital learning material..." class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sage-600 bg-gray-50/50"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold shadow-md shadow-sage-600/20 transition-all">
+                                Publish New Product
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Product Management & Order History -->
+                    <div class="lg:col-span-7 space-y-8">
+                        <!-- Products Manager Table -->
+                        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                                <h3 class="font-extrabold text-navy-900 text-lg">Manage Existing Products</h3>
+                                <span id="admin-prod-count" class="text-xs font-bold text-gray-500">0 items</span>
+                            </div>
+                            <div class="overflow-x-auto max-h-[350px] overflow-y-auto pr-1">
+                                <div id="admin-products-list" class="space-y-3">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GCash Orders History Table -->
+                        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
+                            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                                    <h3 class="font-extrabold text-navy-900 text-lg">Recent GCash Orders</h3>
+                                </div>
+                                <span class="text-xs text-gray-500 font-medium">Account: <strong>09518945949</strong> (Julia Ann N.)</span>
+                            </div>
+                            <div class="overflow-x-auto max-h-[300px] overflow-y-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead>
+                                        <tr class="text-gray-400 border-b border-gray-100 pb-2">
+                                            <th class="pb-3">Customer</th>
+                                            <th class="pb-3">Ref No.</th>
+                                            <th class="pb-3">Amount</th>
+                                            <th class="pb-3">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-orders-list" class="divide-y divide-gray-50">
+                                        <tr>
+                                            <td colspan="4" class="py-6 text-center text-gray-400">No GCash transactions recorded yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-navy-900 text-white pt-16 pb-12 border-t border-navy-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-navy-800">
+                <!-- Col 1: Brand -->
+                <div class="md:col-span-5 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sage-500 to-sage-700 flex items-center justify-center text-white shadow-md">
+                            <i class="fa-solid fa-graduation-cap text-lg"></i>
+                        </div>
+                        <span class="text-2xl font-extrabold tracking-tight">Teach<span class="text-sage-500">Craft</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-sm leading-relaxed">
+                        Empowering educators, students, and board exam reviewers with premium, field-tested digital learning assets that save time and ensure excellence.
+                    </p>
+                    <div class="flex space-x-4 text-gray-400">
+                        <a href="#" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-sage-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-sage-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-sage-600 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-tiktok text-sm"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div class="md:col-span-3 space-y-4">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-sage-400">Quick Links</h4>
+                    <ul class="space-y-2.5 text-sm text-gray-300">
+                        <li><button onclick="switchTab('home')" class="hover:text-white transition-colors">Home</button></li>
+                        <li><button onclick="switchTab('shop')" class="hover:text-white transition-colors">All Products</button></li>
+                        <li><a href="#categories" onclick="switchTab('home')" class="hover:text-white transition-colors">Categories</a></li>
+                        <li><a href="#about" onclick="switchTab('home')" class="hover:text-white transition-colors">About Mission</a></li>
+                        <li><button onclick="openOwnerLoginModal()" class="text-sage-400 hover:text-white transition-colors font-semibold flex items-center space-x-1.5"><i class="fa-solid fa-shield-halved text-xs"></i><span>Owner Admin Portal</span></button></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Newsletter -->
+                <div class="md:col-span-4 space-y-4">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-sage-400">Join Teacher Club</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Get weekly freebie printables, teaching tips, and exclusive discount codes directly to your inbox.</p>
+                    <div class="flex items-center space-x-2">
+                        <input type="email" placeholder="Enter your email address" class="w-full px-4 py-2.5 rounded-xl bg-navy-800 border border-navy-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-sage-500">
+                        <button onclick="subscribeNewsletter()" class="px-5 py-2.5 rounded-xl bg-coral-500 hover:bg-coral-600 font-bold text-sm text-white shadow-md transition-colors whitespace-nowrap">Join</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 space-y-4 sm:space-y-0">
+                <p>&copy; 2026 TeachCraft Digital Learning Materials. GCash Verified: <strong class="text-sage-400">Julia Ann Nicolas (09518945949)</strong>.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                    <button onclick="openOwnerLoginModal()" class="hover:underline text-sage-400">Owner Access</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 bg-navy-900/60 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 modal-transition transform scale-95 opacity-0" id="product-modal-content">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-navy-900/60 backdrop-blur-sm hidden justify-end transition-opacity">
+        <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300" id="cart-drawer-content">
+            <!-- Cart Header -->
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-cart-shopping text-sage-600"></i>
+                    <h3 class="font-extrabold text-lg text-navy-900">Your Cart</h3>
+                    <span id="cart-count-badge" class="px-2 py-0.5 bg-sage-100 text-sage-700 text-xs font-bold rounded-full">0</span>
+                </div>
+                <button onclick="closeCart()" class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="flex-grow overflow-y-auto p-6 space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Cart Footer & GCash Checkout CTA -->
+            <div class="p-6 border-t border-gray-100 bg-gray-50/80 space-y-4">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal" class="font-bold text-navy-900">₱0.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>Instant Digital Delivery</span>
+                        <span class="text-sage-600 font-bold">FREE</span>
+                    </div>
+                    <div class="flex justify-between text-base font-extrabold text-navy-900 pt-2 border-t border-gray-200">
+                        <span>Total (GCash)</span>
+                        <span id="cart-total" class="text-coral-500">₱0.00</span>
+                    </div>
+                </div>
+
+                <button onclick="openGcashCheckoutModal()" id="checkout-btn" class="w-full py-3.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-600/25 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-wallet text-sm"></i>
+                    <span>Pay via GCash (Julia Ann N.)</span>
+                </button>
+                <div class="text-center">
+                    <span class="text-[11px] text-gray-400"><i class="fa-solid fa-shield-halved text-sage-600 mr-1"></i> Official GCash • Send to 09518945949</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GCash Payment & Verification Modal -->
+    <div id="gcash-checkout-modal" class="fixed inset-0 z-50 bg-navy-900/70 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-gray-100 space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-xl font-black shadow-md">
+                        G
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extrabold text-navy-900">GCash Secure Checkout</h3>
+                        <p class="text-xs text-gray-500">Transfer payment & enter your transaction reference.</p>
+                    </div>
+                </div>
+                <button onclick="closeGcashCheckoutModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Official GCash Beneficiary Card -->
+            <div class="p-5 rounded-2xl bg-sky-50 border border-sky-200 space-y-3">
+                <div class="text-xs font-bold text-sky-900 uppercase tracking-wider flex items-center justify-between">
+                    <span>Official Recipient Details</span>
+                    <span class="px-2 py-0.5 bg-sky-200/70 text-sky-800 rounded-md text-[10px]">Verified Merchant</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-sm pt-1">
+                    <div>
+                        <span class="block text-[11px] text-gray-500">GCash Name:</span>
+                        <strong class="text-navy-900">Julia Ann Nicolas</strong>
+                    </div>
+                    <div>
+                        <span class="block text-[11px] text-gray-500">GCash Number:</span>
+                        <strong class="text-navy-900 font-mono tracking-wide">09518945949</strong>
+                    </div>
+                </div>
+                <div class="pt-2 border-t border-sky-200/60 flex items-center justify-between text-xs text-sky-800">
+                    <span>Amount to Transfer:</span>
+                    <strong id="gcash-modal-amount" class="text-lg font-black text-coral-600">₱0.00</strong>
+                </div>
+            </div>
+
+            <!-- Verification Form -->
+            <form onsubmit="handleGcashPaymentSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Your Full Name</label>
+                    <input type="text" id="gcash-payer-name" required placeholder="e.g. Maria Santos" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sky-500 bg-gray-50/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Your Email Address (For Instant Download Link)</label>
+                    <input type="email" id="gcash-payer-email" required placeholder="maria@deped.gov.ph" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-sky-500 bg-gray-50/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">GCash Reference Number (13-digit RefNo)</label>
+                    <input type="text" id="gcash-ref-no" required placeholder="e.g. 1029384756102" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-mono focus:outline-none focus:border-sky-500 bg-gray-50/50">
+                    <span class="block text-[11px] text-gray-400 mt-1">Enter the SMS reference number after sending money via GCash app.</span>
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold shadow-lg shadow-sky-600/25 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Verify GCash Payment & Get Instant Files</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Success & Instant Download Modal -->
+    <div id="success-download-modal" class="fixed inset-0 z-50 bg-navy-900/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-gray-100 space-y-6 text-center">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl shadow-md">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-extrabold text-navy-900">Payment Verified Successfully!</h3>
+                <p class="text-sm text-gray-500 mt-1">Thank you! Your GCash payment to <strong class="text-navy-900">Julia Ann Nicolas (09518945949)</strong> has been confirmed.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-sage-50 border border-sage-100 text-left space-y-2">
+                <div class="text-xs font-bold text-sage-800 uppercase">📦 Your Instant Download Links:</div>
+                <p class="text-xs text-gray-600">Secure download links and Notion dashboard access tokens have been dispatched to your email.</p>
+                <div class="pt-2">
+                    <button onclick="simulateDirectDownload()" class="w-full py-2.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs font-bold shadow-md">
+                        <i class="fa-solid fa-cloud-arrow-down mr-1"></i> Download Files Now (ZIP / PDF)
+                    </button>
+                </div>
+            </div>
+            <button onclick="closeSuccessModal()" class="w-full py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm">
+                Return to Storefront
+            </button>
+        </div>
+    </div>
+
+    <!-- Owner Passkey Login Modal (NO HINT) -->
+    <div id="owner-login-modal" class="fixed inset-0 z-50 bg-navy-900/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-gray-100 space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-2xl bg-navy-900 text-sage-400 flex items-center justify-center text-xl shadow-md">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extrabold text-navy-900">Owner Passkey Portal</h3>
+                        <p class="text-xs text-gray-500">Authorized owner access only.</p>
+                    </div>
+                </div>
+                <button onclick="closeOwnerLoginModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="handleOwnerLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Enter Secret Passkey</label>
+                    <input type="password" id="owner-passkey-input" required autocomplete="current-password" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-center text-lg font-mono tracking-widest focus:outline-none focus:border-sage-600 bg-gray-50/50">
+                </div>
+                <div id="owner-login-error" class="hidden text-xs text-red-500 font-semibold text-center">
+                    Incorrect passkey. Access denied.
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-4 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold shadow-lg transition-all">
+                        Authenticate & Open Admin Dashboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-navy-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 transform translate-y-24 opacity-0 transition-all duration-300">
+        <div class="w-7 h-7 rounded-xl bg-sage-500 text-white flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <div>
+            <div id="toast-title" class="text-xs font-bold">Success</div>
+            <div id="toast-desc" class="text-[11px] text-gray-300">Item added to your cart successfully.</div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Product Database
+        let products = [
+            {
+                id: 1,
+                title: "Complete Grade 3 Math Remediation & Activity Toolkit",
+                category: "Teachers",
+                tag: "Best Seller",
+                price: 499,
+                originalPrice: 999,
+                rating: 4.9,
+                reviewsCount: 142,
+                format: "PDF, Canva & Google Drive",
+                badge: "Instant PDF + Canva",
+                image: "https://placehold.co/600x400/e3ece7/3f574d?text=Grade+3+Math+Toolkit",
+                description: "A comprehensive 150-page toolkit designed specifically for elementary educators. Includes mastery drills, word problem modules, flashcards, and fully editable Canva templates to make math fun and engaging.",
+                whatsIncluded: [
+                    "50+ Ready-to-Print Worksheet Pages",
+                    "Complete Answer Keys for All Modules",
+                    "Fully Editable Canva Template Links",
+                    "Teacher Implementation Guide & Rubrics",
+                    "Lifetime Access & Free Future Updates"
+                ]
+            },
+            {
+                id: 2,
+                title: "Professional LET Board Exam & Civil Service Master Reviewer",
+                category: "Reviewers",
+                tag: "Top Rated",
+                price: 699,
+                originalPrice: 1499,
+                rating: 5.0,
+                reviewsCount: 288,
+                format: "PDF & Notion Database",
+                badge: "Notion + Printable PDF",
+                image: "https://placehold.co/600x400/1b2a38/ffffff?text=LET+Master+Reviewer",
+                description: "The ultimate board exam preparation kit. Features 1,200+ rigorous practice questions with rationalized answers, general education, professional education, and major specialization notes organized inside a sleek Notion database.",
+                whatsIncluded: [
+                    "1,200+ Practice Items with Detailed Rationales",
+                    "Notion Study Tracker & Spaced Repetition System",
+                    "General & Professional Education Flashcards",
+                    "Mock Board Exam Simulator (Timed PDF)",
+                    "Pass Guarantee Resource Handbook"
+                ]
+            },
+            {
+                id: 3,
+                title: "Notion Digital Teacher Grade Tracker & Lesson Planner",
+                category: "Digital Dashboards",
+                tag: "Must-Have",
+                price: 399,
+                originalPrice: 799,
+                rating: 4.8,
+                reviewsCount: 96,
+                format: "Notion Template",
+                badge: "1-Click Notion Duplicate",
+                image: "https://placehold.co/600x400/f4f7f5/527264?text=Notion+Grade+Tracker",
+                description: "An all-in-one digital workspace built in Notion for modern educators. Automatically compute grades, track student attendance, organize weekly lesson plans, and manage school projects in one gorgeous dashboard.",
+                whatsIncluded: [
+                    "Automated Gradebook & Percentage Calculator",
+                    "Weekly & Monthly Lesson Plan Calendar",
+                    "Student Attendance & Behavior Tracker",
+                    "Class Resource & File Repository",
+                    "Step-by-Step Video Setup Guide"
+                ]
+            },
+            {
+                id: 4,
+                title: "Phonics & Reading Remediation Kit for Early Grades",
+                category: "Printables",
+                tag: "Teacher Favorite",
+                price: 349,
+                originalPrice: 699,
+                rating: 4.9,
+                reviewsCount: 114,
+                format: "High-Res PDF",
+                badge: "Print-Ready PDF",
+                image: "https://placehold.co/600x400/e3ece7/ee6c4d?text=Phonics+Remediation",
+                description: "Boost reading fluency with scientifically structured phonics drills, blending cards, sight word stories, and reading comprehension worksheets designed for K-3 learners.",
+                whatsIncluded: [
+                    "80+ Phonics Blending & Decodable Stories",
+                    "High-Frequency Sight Word Flashcards",
+                    "Student Progress Monitoring Charts",
+                    "Teacher Assessment Guidebook",
+                    "Print-Ready High-Resolution PDF Format"
+                ]
+            },
+            {
+                id: 5,
+                title: "Senior High School STEM General Physics Study Guide",
+                category: "Reviewers",
+                tag: "New Release",
+                price: 449,
+                originalPrice: 899,
+                rating: 4.7,
+                reviewsCount: 53,
+                format: "PDF & Formula Cheat Sheet",
+                badge: "Instant PDF Download",
+                image: "https://placehold.co/600x400/101820/6b9080?text=Physics+Study+Guide",
+                description: "Master kinematics, Newton's laws, thermodynamics, and electromagnetism with step-by-step problem-solving frameworks, worked examples, and comprehensive formula summary sheets.",
+                whatsIncluded: [
+                    "Complete Kinematics & Dynamics Problem Sets",
+                    "Step-by-Step Solutions & Explanations",
+                    "Ultimate Physics Formula Cheat Sheet",
+                    "Practice Quiz Bank with Answer Keys",
+                    "Printable & Tablet-Optimized PDF"
+                ]
+            },
+            {
+                id: 6,
+                title: "Kindergarten Classroom Decor & Interactive Routine Bundle",
+                category: "Teachers",
+                tag: "Bundle Deal",
+                price: 499,
+                originalPrice: 1200,
+                rating: 4.9,
+                reviewsCount: 178,
+                format: "Canva & Printable PDF",
+                badge: "Canva + PDF Bundle",
+                image: "https://placehold.co/600x400/f4f7f5/d95332?text=Kindergarten+Decor",
+                description: "Transform your classroom into an inspiring wonderland. Includes editable calendar boards, weather charts, behavior reward charts, name tags, and daily schedule cards.",
+                whatsIncluded: [
+                    "Over 200+ Editable Decor & Label Templates",
+                    "Morning Routine Visual Schedule Boards",
+                    "Behavior Reward & Star Charts",
+                    "Fully Customizable in Canva",
+                    "Ready-to-Print PDF Versions"
+                ]
+            }
+        ];
+
+        // Cart State & Orders Database for Owner Admin
+        let cart = [];
+        let orders = [
+            { id: "GC-98241", name: "Maria Santos", email: "maria@deped.gov.ph", ref: "1092837465012", amount: 499, date: "Oct 7, 2026" },
+            { id: "GC-98242", name: "John Dominic", email: "john@lpt.edu", ref: "9823746102938", amount: 699, date: "Oct 7, 2026" }
+        ];
+        let isOwnerAuthenticated = false;
+
+        // Navigation Switching
+        function switchTab(tabId) {
+            const homeView = document.getElementById('view-home');
+            const shopView = document.getElementById('view-shop');
+            const adminView = document.getElementById('view-admin');
+            const navHome = document.getElementById('nav-home');
+            const navShop = document.getElementById('nav-shop');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            homeView.classList.add('hidden');
+            shopView.classList.add('hidden');
+            adminView.classList.add('hidden');
+
+            if (tabId === 'home') {
+                homeView.classList.remove('hidden');
+                navHome.classList.add('text-sage-700', 'font-semibold');
+                navHome.classList.remove('text-gray-600');
+                navShop.classList.add('text-gray-600');
+                navShop.classList.remove('text-sage-700', 'font-semibold');
+            } else if (tabId === 'shop') {
+                shopView.classList.remove('hidden');
+                navShop.classList.add('text-sage-700', 'font-semibold');
+                navShop.classList.remove('text-gray-600');
+                navHome.classList.add('text-gray-600');
+                navHome.classList.remove('text-sage-700', 'font-semibold');
+                renderShopProducts(products);
+            } else if (tabId === 'admin') {
+                if (!isOwnerAuthenticated) {
+                    openOwnerLoginModal();
+                    return;
+                }
+                adminView.classList.remove('hidden');
+                renderAdminDashboard();
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Render Featured Products on Homepage
+        function renderFeaturedProducts() {
+            const container = document.getElementById('featured-grid');
+            const featured = products.slice(0, 3);
+            container.innerHTML = featured.map(p => createProductCardHTML(p)).join('');
+        }
+
+        // Render Products in Shop
+        function renderShopProducts(itemsToRender) {
+            const container = document.getElementById('shop-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            if (itemsToRender.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = itemsToRender.map(p => createProductCardHTML(p)).join('');
+        }
+
+        // Product Card HTML Template
+        function createProductCardHTML(p) {
+            return `
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                    <div class="relative overflow-hidden bg-sage-50 aspect-[16/10]">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/e3ece7/3f574d?text=TeachCraft+Material'">
+                        <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-lg bg-white/90 backdrop-blur-md text-[11px] font-extrabold text-navy-900 shadow-sm">${p.tag}</span>
+                            <span class="px-3 py-1 rounded-lg bg-sage-600 text-white text-[11px] font-bold shadow-sm">${p.badge}</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs text-gray-400 font-medium">
+                                <span><i class="fa-solid fa-folder text-sage-600 mr-1"></i> ${p.category}</span>
+                                <div class="flex items-center text-amber-400">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span class="text-navy-900 font-bold ml-1">${p.rating}</span>
+                                    <span class="text-gray-400 ml-0.5">(${p.reviewsCount})</span>
+                                </div>
+                            </div>
+                            <h3 class="font-extrabold text-navy-900 text-lg line-clamp-2 group-hover:text-sage-600 transition-colors">${p.title}</h3>
+                            <p class="text-xs text-gray-500 line-clamp-2">${p.description}</p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 line-through">₱${p.originalPrice}</span>
+                                <div class="text-xl font-black text-coral-500">₱${p.price}</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="openProductModal(${p.id})" class="px-3.5 py-2.5 rounded-xl bg-sage-50 hover:bg-sage-100 text-sage-700 text-xs font-bold transition-colors">
+                                    Preview
+                                </button>
+                                <button onclick="addToCart(${p.id})" class="px-4 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold shadow-md transition-all flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filter Catalog by Category
+        function filterCategory(category) {
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-cat') === category) {
+                    btn.classList.remove('bg-sage-50', 'text-gray-700');
+                    btn.classList.add('bg-navy-900', 'text-white');
+                } else {
+                    btn.classList.add('bg-sage-50', 'text-gray-700');
+                    btn.classList.remove('bg-navy-900', 'text-white');
+                }
+            });
+
+            if (category === 'All') {
+                renderShopProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderShopProducts(filtered);
+            }
+        }
+
+        // Search Input Handler
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                p.description.toLowerCase().includes(query) ||
+                p.category.toLowerCase().includes(query)
+            );
+            renderShopProducts(filtered);
+        }
+
+        // Open Individual Product Modal
+        function openProductModal(productId) {
+            const p = products.find(item => item.id === productId);
+            if (!p) return;
+
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('product-modal-content');
+
+            content.innerHTML = `
+                <div class="relative bg-sage-50 aspect-[16/9]">
+                    <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover">
+                    <button onclick="closeProductModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-navy-900 flex items-center justify-center shadow-lg transition-colors">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                    <div class="absolute bottom-4 left-4">
+                        <span class="px-3.5 py-1.5 rounded-xl bg-navy-900 text-white text-xs font-bold shadow-md">${p.category}</span>
+                    </div>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-1">
+                            <span class="font-bold text-sage-600"><i class="fa-solid fa-file-arrow-down mr-1"></i> Format: ${p.format}</span>
+                            <div class="flex items-center text-amber-400">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="text-navy-900 font-bold ml-1">${p.rating} / 5.0</span>
+                                <span class="text-gray-400 ml-1">(${p.reviewsCount} reviews)</span>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy-900">${p.title}</h2>
+                        <p class="text-gray-600 text-sm mt-2 leading-relaxed">${p.description}</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-sage-50/70 border border-sage-100 space-y-3">
+                        <h4 class="font-extrabold text-navy-900 text-sm uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-circle-check text-sage-600 mr-2 text-base"></i> What's Included in This Material:
+                        </h4>
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-gray-700 font-medium">
+                            ${p.whatsIncluded.map(item => `<li class="flex items-center space-x-2"><i class="fa-solid fa-check text-sage-600 text-[10px]"></i><span>${item}</span></li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center space-x-3 p-4 rounded-xl bg-sky-50 border border-sky-200/60 text-sky-900 text-xs">
+                        <i class="fa-solid fa-wallet text-sky-600 text-lg"></i>
+                        <div>
+                            <span class="font-bold">GCash Payment (Julia Ann Nicolas - 09518945949):</span> Instant download links sent immediately upon verification.
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through">₱${p.originalPrice}</span>
+                            <div class="text-2xl font-black text-coral-500">₱${p.price} <span class="text-xs text-gray-500 font-normal">/ lifetime access</span></div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="closeProductModal()" class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold transition-colors">
+                                Close
+                            </button>
+                            <button onclick="addToCart(${p.id}); closeProductModal(); openCart();" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-bold shadow-lg shadow-sky-600/25 transition-all">
+                                Add to Cart & Pay via GCash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                const modalContent = document.getElementById('product-modal-content');
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            const modalContent = document.getElementById('product-modal-content');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Cart Management
+        function addToCart(productId) {
+            const product = products.find(item => item.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast("Added to Cart", `${product.title} has been added successfully.`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        function getCartSubtotal() {
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const countBadge = document.getElementById('cart-count-badge');
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalItems;
+            countBadge.innerText = totalItems;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 space-y-3">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-sage-50 text-sage-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <h4 class="font-bold text-navy-900">Your cart is empty</h4>
+                        <p class="text-xs text-gray-500">Explore our catalog and add learning materials to begin.</p>
+                        <button onclick="closeCart(); switchTab('shop');" class="px-4 py-2 bg-sage-600 text-white rounded-xl text-xs font-bold mt-2">Browse Shop</button>
+                    </div>
+                `;
+                subtotalEl.innerText = '₱0.00';
+                totalEl.innerText = '₱0.00';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            let subtotal = getCartSubtotal();
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center space-x-4 p-4 rounded-2xl bg-sage-50/50 border border-sage-100">
+                    <img src="${item.image}" alt="${item.title}" class="w-16 h-16 rounded-xl object-cover">
+                    <div class="flex-grow">
+                        <h4 class="font-bold text-navy-900 text-sm line-clamp-1">${item.title}</h4>
+                        <div class="text-xs text-coral-500 font-extrabold mt-0.5">₱${item.price}</div>
+                        <div class="text-[11px] text-gray-500 mt-1">Qty: ${item.quantity}</div>
+                    </div>
+                    <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-coral-500 p-2 transition-colors">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            subtotalEl.innerText = `₱${subtotal.toLocaleString()}`;
+            totalEl.innerText = `₱${subtotal.toLocaleString()}`;
+        }
+
+        function openCart() {
+            const modal = document.getElementById('cart-modal');
+            const drawer = document.getElementById('cart-drawer-content');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                drawer.classList.remove('translate-x-full');
+                drawer.classList.add('translate-x-0');
+            }, 10);
+        }
+
+        function closeCart() {
+            const modal = document.getElementById('cart-modal');
+            const drawer = document.getElementById('cart-drawer-content');
+            drawer.classList.remove('translate-x-0');
+            drawer.classList.add('translate-x-full');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // GCash Checkout Flow
+        function openGcashCheckoutModal() {
+            closeCart();
+            const subtotal = getCartSubtotal();
+            document.getElementById('gcash-modal-amount').innerText = `₱${subtotal.toLocaleString()}`;
+            const modal = document.getElementById('gcash-checkout-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeGcashCheckoutModal() {
+            const modal = document.getElementById('gcash-checkout-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function handleGcashPaymentSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('gcash-payer-name').value;
+            const email = document.getElementById('gcash-payer-email').value;
+            const ref = document.getElementById('gcash-ref-no').value;
+            const amount = getCartSubtotal();
+
+            // Record order for owner admin
+            const newOrder = {
+                id: "GC-" + Math.floor(10000 + Math.random() * 90000),
+                name: name,
+                email: email,
+                ref: ref,
+                amount: amount,
+                date: "Just now"
+            };
+            orders.unshift(newOrder);
+
+            closeGcashCheckoutModal();
+            cart = [];
+            updateCartUI();
+
+            const successModal = document.getElementById('success-download-modal');
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('success-download-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            switchTab('home');
+        }
+
+        function simulateDirectDownload() {
+            showToast("Download Started", "Your digital materials package (ZIP) is downloading.");
+        }
+
+        // Owner Passkey Security & Admin Dashboard
+        function openOwnerLoginModal() {
+            if (isOwnerAuthenticated) {
+                switchTab('admin');
+                return;
+            }
+            document.getElementById('owner-passkey-input').value = '';
+            document.getElementById('owner-login-error').classList.add('hidden');
+            const modal = document.getElementById('owner-login-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeOwnerLoginModal() {
+            const modal = document.getElementById('owner-login-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function handleOwnerLoginSubmit(e) {
+            e.preventDefault();
+            const passkey = document.getElementById('owner-passkey-input').value;
+            if (passkey === "070503") {
+                isOwnerAuthenticated = true;
+                closeOwnerLoginModal();
+                switchTab('admin');
+                showToast("Owner Verified", "Welcome back! Admin dashboard unlocked.");
+            } else {
+                document.getElementById('owner-login-error').classList.remove('hidden');
+            }
+        }
+
+        function ownerLogout() {
+            isOwnerAuthenticated = false;
+            switchTab('home');
+            showToast("Locked", "Owner session securely locked.");
+        }
+
+        function renderAdminDashboard() {
+            const totalRev = orders.reduce((sum, o) => sum + o.amount, 0);
+            document.getElementById('admin-total-revenue').innerText = `₱${totalRev.toLocaleString()}`;
+            document.getElementById('admin-total-orders').innerText = orders.length;
+            document.getElementById('admin-total-products').innerText = products.length;
+            document.getElementById('admin-prod-count').innerText = `${products.length} items`;
+
+            // Products list
+            const prodContainer = document.getElementById('admin-products-list');
+            prodContainer.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-100 text-xs">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                        <div>
+                            <h4 class="font-bold text-navy-900 line-clamp-1">${p.title}</h4>
+                            <span class="text-gray-400">₱${p.price} • ${p.category}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteProduct(${p.id})" class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Delete Product">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            // Orders list
+            const ordersContainer = document.getElementById('admin-orders-list');
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-gray-400">No GCash transactions recorded yet.</td></tr>`;
+            } else {
+                ordersContainer.innerHTML = orders.map(o => `
+                    <tr class="hover:bg-gray-50/80">
+                        <td class="py-3 font-bold text-navy-900">${o.name}<br><span class="text-[10px] text-gray-400 font-normal">${o.email}</span></td>
+                        <td class="py-3 font-mono text-sky-700">${o.ref}</td>
+                        <td class="py-3 font-bold text-coral-600">₱${o.amount.toLocaleString()}</td>
+                        <td class="py-3"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Verified GCash</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function handleAddNewProduct(e) {
+            e.preventDefault();
+            const newProd = {
+                id: Date.now(),
+                title: document.getElementById('new-prod-title').value,
+                price: parseFloat(document.getElementById('new-prod-price').value),
+                originalPrice: parseFloat(document.getElementById('new-prod-orig').value),
+                category: document.getElementById('new-prod-cat').value,
+                format: document.getElementById('new-prod-format').value,
+                image: document.getElementById('new-prod-img').value,
+                description: document.getElementById('new-prod-desc').value,
+                tag: "New Release",
+                badge: "Instant Digital",
+                rating: 5.0,
+                reviewsCount: 1,
+                whatsIncluded: [
+                    "High-Resolution PDF Files",
+                    "Fully Editable Source Files",
+                    "Instructor Guidebook",
+                    "Instant Lifetime Access"
+                ]
+            };
+
+            products.unshift(newProd);
+            renderAdminDashboard();
+            renderFeaturedProducts();
+            e.target.reset();
+            showToast("Product Published", "New digital material added successfully to storefront.");
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            renderAdminDashboard();
+            renderFeaturedProducts();
+            showToast("Product Removed", "Material deleted from catalog.");
+        }
+
+        function subscribeNewsletter() {
+            showToast("Subscribed!", "Check your inbox for your free teacher welcome printables.");
+        }
+
+        function showToast(title, desc) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-desc').innerText = desc;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+
+        window.onload = function() {
+            renderFeaturedProducts();
+            updateCartUI();
+        }
+    </script>
+</body>
+</html>
